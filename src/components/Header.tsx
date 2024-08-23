@@ -1,0 +1,98 @@
+import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material"
+import MenuIcon from '@mui/icons-material/Menu';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { AccountCircle } from "@mui/icons-material";
+import { useSelector } from 'react-redux';
+import { RootState } from "../store/store";
+
+const Header: React.FC = () => {
+    const location = useLocation();
+    const [pathName, setPathName] = useState('');
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const userInfo = useSelector((state: RootState) => state.userInfo);
+    
+    useEffect(() => {
+        handlePageName();
+    }, []);
+
+    const handlePageName = () => {
+        if(location.pathname === '/'){
+            return setPathName('Home')
+        };
+        if(location.pathname === '/signup'){
+            return setPathName('SignUp')
+        };
+        if(location.pathname === '/login'){
+            return setPathName('LogIn')
+        };
+        if(location.pathname === '/requests'){
+            return setPathName('Requests')
+        };
+        if(location.pathname === '/create'){
+            return setPathName('Create')
+        };
+        if(location.pathname === '/order'){
+            return setPathName('Order')
+        };
+        if(location.pathname === '/deliver'){
+            return setPathName('Deliver')
+        };
+    };
+
+    return (
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+            <Toolbar>
+                <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+                >
+                <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                {pathName ? pathName : "Invalid Page"}
+                </Typography>
+                
+                <div>
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={(e: React.MouseEvent<HTMLElement>) => {
+                            if(userInfo.email) setAnchorEl(e.currentTarget)
+                        }}
+                        color="inherit"
+                    >
+                        <AccountCircle />
+                    </IconButton>
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={() => setAnchorEl(null)}
+                    >
+                        {userInfo.email && <MenuItem>Email: {userInfo?.email}</MenuItem>}
+                        {userInfo.requests && <MenuItem>Requests: {userInfo?.requests}</MenuItem>}
+                    </Menu>
+                </div>
+            </Toolbar>
+            </AppBar>
+      </Box>
+    )
+}
+
+export default Header;
