@@ -5,7 +5,6 @@ import { setError } from '../../store/actions/errorActions';
 
 export const fetchUserData = () => async (dispatch: Dispatch) => {  
     try {
-      throw new Error("my error")
       const data: UserInfo = {
         email: 'vetal.polishuk@gmail.com',
         requests: 2,
