@@ -3,14 +3,26 @@ import { setUser } from '../../store/actions/userInfoActions';
 import { UserInfo } from '../../types/User'; // Adjust path as necessary
 import { setError } from '../../store/actions/errorActions';
 
-export const fetchUserData = () => async (dispatch: Dispatch) => {  
+const apiUrl = process.env.REACT_APP_API_URL;
+
+export const fetchUserData = (naviatge: Function, location: string) => async (dispatch: Dispatch) => {  
     try {
-      const data: UserInfo = {
-        email: 'vetal.polishuk@gmail.com',
-        requests: 2,
-      };
-      dispatch(setUser(data));
+      const validateResponse = await fetch(`${apiUrl}/auth/validate`, {
+        method: "GET",
+        credentials: 'include' // Ensure cookies are sent with the request
+      });
+
+      const data: UserInfo | { error: string } = await validateResponse.json();
+      console.log({data});
+
+      if("error" in data) throw new Error(data.error);
+      
+      // dispatch(setUser(data));
     } catch (error: any) {
-      dispatch(setError({error: error.message}))
+      if(error.message === 'Token is undefined' && location !== '/signup') {
+        naviatge('/signup');
+        return;
+      }
+      if(error.message !== 'Token is undefined') dispatch(setError({error: error.message}));
     };
 };

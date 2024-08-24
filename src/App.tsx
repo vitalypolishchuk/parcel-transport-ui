@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Routes, Route }  from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation }  from 'react-router-dom';
 import './App.css';
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import Sign from './pages/Sign';
 import Requests from './pages/Requests';
 import Header from './components/Header';
-import { UserInfo } from './types/User';
 import { fetchInitialData } from './api/fetchInitData';
 import { useDispatch } from 'react-redux';
 import ErrorSnackbar from './components/SnackBar';
 
 function App() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
-    fetchInitialData(dispatch);
-  }, [dispatch]);
+    fetchInitialData(dispatch, navigate, location.pathname);
+  }, []);
 
   return (
     <>
       <Header />
       <Routes>
-        <Route path='/signin' element={<SignIn />} />
-        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signup' element={<Sign />} />
+        <Route path='/signin' element={<Sign />} />
         <Route path='/requests' element={<Requests />} />
       </Routes>
       <ErrorSnackbar />
