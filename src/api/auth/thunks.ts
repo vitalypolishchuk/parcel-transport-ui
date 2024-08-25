@@ -40,3 +40,18 @@ export const handleLogin = async (email: string, password: string, dispatch: Dis
     dispatch(setError({ error: error.message }));
   }
 };
+
+export const handleLogout = (navigate: Function, dispatch: Function) => {
+  try {
+      // Clear the cookie
+      Cookies.remove('authToken');
+      
+      // Clear the Redux store
+      dispatch(setUser({ email: '', requests: 0 }));
+      
+      // Redirect to the sign-in page
+      navigate('/signin');
+  } catch (error: any) {
+      dispatch(setError({ error: error.message }));
+  }
+};

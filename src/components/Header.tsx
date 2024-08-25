@@ -1,14 +1,18 @@
 import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../store/store";
 import { Link } from "react-router-dom";
+import { handleLogout } from "../api/auth/thunks";
 
 const Header: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    
     const [pathName, setPathName] = useState('');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const userInfo = useSelector((state: RootState) => state.userInfo);
@@ -41,8 +45,6 @@ const Header: React.FC = () => {
             return setPathName('Deliver')
         };
     };
-
-    const handleLogOut = () => {}
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -127,7 +129,7 @@ const Header: React.FC = () => {
                             {userInfo.email && <MenuItem>Email: {userInfo?.email}</MenuItem>}
                             {userInfo.requests && <MenuItem>Requests: {userInfo?.requests}</MenuItem>}
                             {userInfo.email && (
-                                <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
+                                <MenuItem onClick={() => handleLogout(navigate, dispatch)}>Log Out</MenuItem>
                             )}
                         </Menu>
                     </div>
