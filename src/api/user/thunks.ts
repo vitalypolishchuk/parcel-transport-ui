@@ -13,16 +13,14 @@ export const fetchUserData = (naviatge: Function, location: string) => async (di
       });
 
       const data: UserInfo | { error: string } = await validateResponse.json();
-      console.log({data});
 
       if("error" in data) throw new Error(data.error);
       
-      // dispatch(setUser(data));
+      dispatch(setUser(data));
     } catch (error: any) {
-      if(error.message === 'Token is undefined' && location !== '/signup') {
+      if(location !== '/signup') {
         naviatge('/signup');
         return;
       }
-      if(error.message !== 'Token is undefined') dispatch(setError({error: error.message}));
     };
 };

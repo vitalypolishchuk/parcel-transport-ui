@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setError } from '../store/actions/errorActions';
 import Form from '../components/Form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { handleLogin } from '../api/auth/thunks';
+import { RootState } from '../store/store';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -11,6 +12,7 @@ const Sign: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const userInfo = useSelector((state: RootState) => state.userInfo);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,6 +20,10 @@ const Sign: React.FC = () => {
     const [emailError, setEmailError] = useState('');
     const [submitError, setSubmitError] = useState('');
     const isSignUp = location.pathname === '/signup';
+
+    useEffect(() => {
+        if(userInfo?.email) navigate('/requests');
+    }, [userInfo]);
 
     const validatePassword = (password: string) => {
         if(password.length < 6) return { error: "Password must be at least 6 characters length" }
