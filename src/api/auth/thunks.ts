@@ -24,10 +24,10 @@ export const handleLogin = async (email: string, password: string, dispatch: Dis
     if('error' in data) throw new Error(data.error)
 
     // Save token to cookie
-    Cookies.set('authToken', data.token, { expires: 1 }); // Token expires in 1 day, adjust as needed
+    Cookies.set('authToken', data.token, { expires: 1/24 }); // Token expires in 1 hour
 
     // Fetch user data with token
-    const userDataResponse = await fetch(`${apiUrl}/auth/user`, {
+    const userDataResponse = await fetch(`${apiUrl}/user/getUser`, {
       method: "GET",
       headers: { Authorization: `Bearer ${data.token}` }
     });

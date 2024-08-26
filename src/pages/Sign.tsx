@@ -62,8 +62,6 @@ const Sign: React.FC = () => {
                 navigate('/requests');
             }
 
-            // set email and password to state and redirect
-
             setEmail('');
             setPassword('');
             setPasswordError('');

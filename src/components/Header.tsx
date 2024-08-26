@@ -19,10 +19,6 @@ const Header: React.FC = () => {
     const [navAnchorEl, setNavAnchorEl] = useState<null | HTMLElement>(null);
     
     useEffect(() => {
-        handlePageName();
-    }, []);
-
-    const handlePageName = () => {
         if(location.pathname === '/'){
             return setPathName('Home')
         };
@@ -44,7 +40,7 @@ const Header: React.FC = () => {
         if(location.pathname === '/deliver'){
             return setPathName('Deliver')
         };
-    };
+    }, [location.pathname]);
 
     return (
         <Box sx={{ flexGrow: 1 }}>

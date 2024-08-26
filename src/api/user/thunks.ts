@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 import { setUser } from '../../store/actions/userInfoActions';
 import { UserInfo } from '../../types/User'; // Adjust path as necessary
-import { setError } from '../../store/actions/errorActions';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -18,7 +17,7 @@ export const fetchUserData = (naviatge: Function, location: string) => async (di
       
       dispatch(setUser(data));
     } catch (error: any) {
-      if(location !== '/signup') {
+      if(location !== '/signup' && location !== '/signin') {
         naviatge('/signup');
         return;
       }
