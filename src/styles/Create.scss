@@ -1,0 +1,25 @@
+.create-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+  
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 2rem;
+      outline: 2px solid red;
+
+      .create-button-order,
+      .create-button-delivery {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (min-width: 601px) {
+        .create-button-order, .create-button-delivery{
+            width: 150px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+    }
+  }

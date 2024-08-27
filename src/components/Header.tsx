@@ -78,8 +78,6 @@ const Header: React.FC = () => {
                                 <>
                                     <MenuItem component={Link} to="/requests">Requests</MenuItem>
                                     <MenuItem component={Link} to="/create">Create</MenuItem>
-                                    <MenuItem component={Link} to="/order">Order</MenuItem>
-                                    <MenuItem component={Link} to="/deliver">Deliver</MenuItem>
                                 </>
                             )}
                             {!userInfo.email && (

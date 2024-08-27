@@ -8,6 +8,8 @@ import { fetchInitialData } from './api/fetchInitData';
 import { useDispatch, useSelector } from 'react-redux';
 import ErrorSnackbar from './components/SnackBar';
 import { RootState } from './store/store';
+import SelectRequest from './pages/SelectRequest';
+import CreateRequest from './pages/CreateRequest';
 
 function App() {
   const navigate = useNavigate();
@@ -26,7 +28,9 @@ function App() {
         <Route path='/signup' element={<Sign />} />
         <Route path='/signin' element={<Sign />} />
         <Route path='/requests' element={<Requests />} />
-        
+        <Route path='/create' element={<SelectRequest />} />
+        <Route path='/create/order' element={<CreateRequest requestType='order' />} />
+        <Route path='/create/delivery' element={<CreateRequest requestType='delivery' />} />
         <Route
           path='*'
           element={

@@ -6,3 +6,6 @@ export const FETCH_USER_FAILURE_INFO = 'FETCH_USER_FAILURE'; // For error handli
 // error action types
 export const SET_ERROR = 'SET_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
+
+// request action types
+export const SET_REQUESTS = 'SET_REQUESTS';
