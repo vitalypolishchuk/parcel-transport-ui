@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setError } from '../store/actions/errorActions';
 import Form from '../components/Form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { handleLogin } from '../api/auth/thunks';
 import { RootState } from '../store/store';
+import { setMessage } from '../store/actions/messageActions';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -58,7 +58,8 @@ const Sign: React.FC = () => {
                     throw new Error(data.error);
                 };
             } else {
-                await handleLogin(email, password, dispatch);
+                const loginResponse = await handleLogin(email, password, dispatch);
+                if("error" in loginResponse) return;
                 navigate('/requests');
             }
 
@@ -67,9 +68,14 @@ const Sign: React.FC = () => {
             setPasswordError('');
             setSubmitError('');
 
-            if(isSignUp) navigate('/signin');
+            
+            if(isSignUp) {
+                dispatch(setMessage({ text: "Successfully registered. Please log in", severity: 'success'}))
+                navigate('/signin');
+            }
         } catch(error: any){
-            dispatch(setError({error: error.message}))
+            const err = error instanceof Error ? error.message : "Something went wrong"
+            dispatch(setMessage({ text: err, severity: 'error' }));
         }   
     };
 

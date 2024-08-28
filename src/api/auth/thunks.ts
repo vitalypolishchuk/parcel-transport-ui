@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Dispatch } from 'redux';
 import { setUser } from '../../store/actions/userInfoActions';
-import { setError } from '../../store/actions/errorActions';
 import { UserInfo } from '../../types/User';
 import Cookies from 'js-cookie';
+import { setMessage } from '../../store/actions/messageActions';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -36,8 +36,12 @@ export const handleLogin = async (email: string, password: string, dispatch: Dis
 
     // Update user info in Redux store
     dispatch(setUser(userData));
+
+    return { userData }
   } catch (error: any) {
-    dispatch(setError({ error: error.message }));
+    const err = error instanceof Error ? error.message : "Something went wrong"
+    dispatch(setMessage({ text: err, severity: 'error' }));
+    return { error: err }
   }
 };
 
@@ -52,6 +56,7 @@ export const handleLogout = (navigate: Function, dispatch: Function) => {
       // Redirect to the sign-in page
       navigate('/signin');
   } catch (error: any) {
-      dispatch(setError({ error: error.message }));
+    const err = error instanceof Error ? error.message : "Something went wrong"
+    dispatch(setMessage({ text: err, severity: 'error' }));
   }
 };

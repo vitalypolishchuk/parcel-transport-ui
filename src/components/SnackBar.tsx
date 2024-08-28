@@ -2,41 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
-import { clearError } from '../store/actions/errorActions';
-import { Error } from '../types/Common';
+import { Message } from '../types/Common';
+import { clearMessage } from '../store/actions/messageActions';
 
-const ErrorSnackbar: React.FC = () => {
+const MessageSnackbar: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const [currentError, setCurrentError] = useState<Error | null>(null);
-    const errors = useSelector((state: RootState) => state.error.errors);
+    const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
+    const messages = useSelector((state: RootState) => state.messages); // Assume this is the state for messages
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (errors.length > 0) {
-            setCurrentError(errors[0]);
+        if (messages.length > 0) {
+            setCurrentMessage(messages[0]);
             setOpen(true);
         } else {
             setOpen(false);
         }
-    }, [errors]);
+    }, [messages]);
 
     const handleClose = () => {
-        if(!currentError) return;
-        dispatch(clearError(currentError.id as string));
-        setCurrentError(null);
+        if (!currentMessage) return;
+        dispatch(clearMessage(currentMessage.id as string));
+        setCurrentMessage(null);
     };
 
     return (
         <Snackbar
             open={open}
-            autoHideDuration={6000}
+            autoHideDuration={5000}
             onClose={handleClose}
         >
-            <Alert onClose={handleClose} severity="error">
-                {currentError?.error}
+            <Alert onClose={handleClose} severity={currentMessage?.severity || 'info'}>
+                {currentMessage?.text}
             </Alert>
         </Snackbar>
     );
 };
 
-export default ErrorSnackbar;
+export default MessageSnackbar;

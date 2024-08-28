@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import {
+    Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton,
+    Dialog, DialogActions, DialogContent, DialogTitle, TextField, Snackbar
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import SortIcon from '@mui/icons-material/Sort';
-import { fetchRequests } from "../api/requests/thunks";
+import { deleteRequest, editRequest, fetchRequests } from "../api/requests/thunks";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
@@ -12,27 +17,28 @@ function Requests() {
     const dispatch = useDispatch();
     const requests: Request[] = useSelector((state: RootState) => state.requests);
     const [sortedRequests, setSortedRequests] = useState<Request[]>([]);
-    const [sortBy, setSortBy] = useState<'dispatch-date' | 'creation-date'>('dispatch-date');
-    
-    // Sort by creation date
+    const [sortBy, setSortBy] = useState<'dispatch-date' | 'creation-date'>('creation-date');
+    const [openDialog, setOpenDialog] = useState(false);
+    const [editRequestData, setEditRequestData] = useState<{ id: string, description: string } | null>(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+
     const sortByCreationDate = (requests: Request[]) => {
         return [...requests].sort((a, b) => {
             const dateA = new Date(a.createdAt || '').getTime();
             const dateB = new Date(b.createdAt || '').getTime();
-            return dateB - dateA; // Descending order, latest first
+            return dateB - dateA;
         });
     };
-    
-    // Sort by dispatch date
+
     const sortByDispatchDate = (requests: Request[]) => {
         return [...requests].sort((a, b) => {
             const dateA = new Date(a.dispatchDate).getTime();
             const dateB = new Date(b.dispatchDate).getTime();
-            return dateB - dateA; // Descending order, latest first
+            return dateB - dateA;
         });
     };
-    
-    // Apply sorting whenever the requests array or sortBy changes
+
     useEffect(() => {
         let sortedRequests: Request[] = [];
         if (sortBy === 'creation-date') {
@@ -45,21 +51,29 @@ function Requests() {
 
     useEffect(() => {
         fetchRequests(navigate, dispatch);
-    }, []);
+    }, [dispatch, navigate]);
 
-    const handleSortToggle = () => {
-        setSortBy(prevSortBy => prevSortBy === 'creation-date' ? 'dispatch-date' : 'creation-date');
+    const handleOpenDialog = (id: string, description: string) => {
+        setEditRequestData({id, description});
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setEditRequestData(null);
+        setOpenDialog(false);
+    };
+
+    const handleDeleteRequest = async (id: string) => {
+        await deleteRequest(id, navigate, dispatch)
+    };
+
+    const handleSaveRequest = async () => {
+        await editRequest(editRequestData!.id, editRequestData!.description, navigate, dispatch)
+        handleCloseDialog();
     };
 
     return (
         <>
-            {/* Sort buttons above the table */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem', marginTop: '2rem' }}>
-            <IconButton onClick={handleSortToggle} aria-label="sort">
-                <SortIcon />
-            </IconButton>
-            </div>
-
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -79,6 +93,7 @@ function Requests() {
                                     Creation Date
                                 </Button>
                             </TableCell>
+                            <TableCell>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -89,13 +104,45 @@ function Requests() {
                                 <TableCell>{request.toCity}</TableCell>
                                 <TableCell>{request.parcelType || 'N/A'}</TableCell>
                                 <TableCell>{new Date(request.dispatchDate).toLocaleDateString()}</TableCell>
-                                <TableCell>{request.description}</TableCell>
+                                <TableCell>{request.description || 'N/A'}</TableCell>
                                 <TableCell>{new Date(request.createdAt as string).toLocaleDateString()}</TableCell>
+                                <TableCell>
+                                    <IconButton onClick={() => handleOpenDialog(request.id, request.description)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleDeleteRequest(request.id)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>Edit Request</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Description"
+                        value={editRequestData?.description || ''}
+                        onChange={(e) => setEditRequestData((prev) => ({...prev, description: e.target.value} as { id: string, description: string }))}
+                        fullWidth
+                    />
+                    {/* Add other fields as needed */}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={handleSaveRequest}>Save</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </>
     );
 }

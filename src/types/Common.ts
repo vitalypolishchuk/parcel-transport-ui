@@ -1,6 +1,5 @@
-export interface Error {
+export interface Message {
     id?: string;
-    error: string;
-    code?: string;
-    details?: any;
+    text: string;
+    severity: 'error' | 'warning' | 'info' | 'success';
 }

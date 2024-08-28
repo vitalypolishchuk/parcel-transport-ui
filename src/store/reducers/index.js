@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import errorReducer from "./errorReducer";
 import userInfoReducer from "./userInfoReducer";
 import requestReducer from "./requestReducer";
+import messageReducer from "./messageReducer";
 
 const rootReducer = combineReducers({
     userInfo: userInfoReducer,
-    error: errorReducer,
+    messages: messageReducer,
     requests: requestReducer
 })
 

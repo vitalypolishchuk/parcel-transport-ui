@@ -6,7 +6,7 @@ import Requests from './pages/Requests';
 import Header from './components/Header';
 import { fetchInitialData } from './api/fetchInitData';
 import { useDispatch, useSelector } from 'react-redux';
-import ErrorSnackbar from './components/SnackBar';
+import MessageSnackbar from './components/SnackBar';
 import { RootState } from './store/store';
 import SelectRequest from './pages/SelectRequest';
 import CreateRequest from './pages/CreateRequest';
@@ -38,7 +38,7 @@ function App() {
           }
         />
     </Routes>
-      <ErrorSnackbar />
+      <MessageSnackbar />
     </>
   );
 }

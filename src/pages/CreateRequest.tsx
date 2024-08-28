@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Button, TextField, MenuItem, Typography } from '@mui/material';
 import '../styles/Create.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { setError } from '../store/actions/errorActions';
 import { RootState } from '../store/store';
+import { setMessage } from '../store/actions/messageActions';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -53,7 +53,8 @@ const CreateRequest: React.FC<CreateRequestProps> = ({ requestType }) => {
 
     console.log(requestData);
     } catch(error){
-      dispatch(setError({ error: error instanceof Error ? error.message : "Something went wrong" }))
+      const err = error instanceof Error ? error.message : "Something went wrong"
+      dispatch(setMessage({ text: err, severity: 'error' }));
     }    
   };
 
