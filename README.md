@@ -16,14 +16,13 @@
     cd your-repo-name
    ```
 
-2. **Install dependencies for both the client and server:**
+2. **Install dependencies for the client:**
    ```
-    cd client
     npm install
    ```
 
 ### Environment variables
-3. **Create a .env file in both the client and server directories and add the following variables:**
+3. **Create a .env file for the client and add the following variables:**
     REACT_APP_API_URL=http://localhost:5000/api
 
 ### Running the application
