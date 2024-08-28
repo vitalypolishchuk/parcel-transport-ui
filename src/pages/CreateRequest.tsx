@@ -23,35 +23,35 @@ const CreateRequest: React.FC<CreateRequestProps> = ({ requestType }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     try{
-      event.preventDefault(); 
-        const requestResponse = await fetch(`${apiUrl}/request/create`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          user_email: userInfo.email,
-          request: {
-            request_type: requestType,
-            from_city: fromCity,
-            to_city: toCity,
-            parcel_type: parcelType,
-            dispatch_date: dispatchDate,
-            description
-          }
-        })
-    });
+        event.preventDefault(); 
+          const requestResponse = await fetch(`${apiUrl}/request/create`, {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            user_email: userInfo.email,
+            request: {
+              request_type: requestType,
+              from_city: fromCity,
+              to_city: toCity,
+              parcel_type: parcelType,
+              dispatch_date: dispatchDate,
+              description
+            }
+          })
+      });
 
-    const requestData = await requestResponse.json();
-    if("error" in requestData) throw new Error(requestData.error);
+      const requestData = await requestResponse.json();
+      if("error" in requestData) throw new Error(requestData.error);
 
-    setFromCity('');
-    setToCity('');
-    setParcelType('');
-    setDispatchDate('');
-    setDescription('');
+      setFromCity('');
+      setToCity('');
+      setParcelType('');
+      setDispatchDate('');
+      setDescription('');
 
-    console.log(requestData);
+      dispatch(setMessage({ text: `${requestType} was successfully created`, severity: 'success' }))
     } catch(error){
       const err = error instanceof Error ? error.message : "Something went wrong"
       dispatch(setMessage({ text: err, severity: 'error' }));
