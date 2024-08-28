@@ -123,13 +123,13 @@ function Requests() {
             <Dialog open={openDialog} onClose={handleCloseDialog}>
                 <DialogTitle>Edit Request</DialogTitle>
                 <DialogContent>
-                    <TextField
+                    <TextField 
+                        sx={{ marginTop: 2 }}
                         label="Description"
                         value={editRequestData?.description || ''}
                         onChange={(e) => setEditRequestData((prev) => ({...prev, description: e.target.value} as { id: string, description: string }))}
                         fullWidth
                     />
-                    {/* Add other fields as needed */}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog}>Cancel</Button>
