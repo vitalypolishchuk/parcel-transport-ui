@@ -11,14 +11,14 @@
 1. **Clone the repository:**
 
    ```
-    bash
-    git clone https://github.com/vitalypolishchuk/parcel-transport-ui
-    cd your-repo-name
+   bash
+   git clone https://github.com/vitalypolishchuk/parcel-transport-ui
+   cd your-repo-name
    ```
 
 2. **Install dependencies for the client:**
    ```
-    npm install
+   npm install
    ```
 
 ### Environment variables
@@ -26,4 +26,6 @@
     REACT_APP_API_URL=http://localhost:5000/api
 
 ### Running the application
-    npm start
+   ```
+   npm start
+   ```
